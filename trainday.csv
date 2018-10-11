@@ -2,10 +2,13 @@ FL_DATE,is_train_day
 2015-01-01,True
 2015-01-04,True
 2015-01-05,True
+invalid
 2015-01-07,True
 2015-01-08,True
+
 2015-01-09,True
 2015-01-10,True
+error in data
 2015-01-11,True
 2015-01-12,True
 2015-01-13,True

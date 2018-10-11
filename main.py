@@ -13,7 +13,7 @@ PROJECT_ID = '<GCP-PROJECT-ID>'
 #OUTPUT_FILEPATH= 'gs://{}/output/out.txt'.format(PROJECT_ID)
 #SUMMARY_FILEPATH= 'gs://{}/output/summary.txt'.format(PROJECT_ID)
 #OUTPUT_TEMP_FILEPATH= 'gs://{}/output/temp'.format(PROJECT_ID)
-#INPUT_FILEPATH = 'movie_metadata.csv'
+
 RUNNER = 'DirectRunner'
 INPUT_FILEPATH= 'trainday.csv'
 OUTPUT_FILEPATH = 'output.txt'
@@ -35,7 +35,7 @@ class FilterHeader(apache_beam.DoFn):
 class Parse(apache_beam.DoFn):
     def process(self, element):
         data = element.split(",")
-        if len(data) > 0:
+        if len(data) == 2:
             yield {
                     'Result': True,
                     'Data': data
