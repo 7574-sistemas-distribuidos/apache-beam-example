@@ -6,18 +6,22 @@ import re
 import logging
 from google.cloud import storage
 
+# gcp options to run in the cloud
+RUNNER = 'DataflowRunner'
 PROJECT_ID = '<GCP-PROJECT-ID>'
+PROJECT_REGION = '<GCP-REGION>'
+STORAGE_BASE_URI = 'gs://{}'.format(PROJECT_ID)
+INPUT_FILEPATH = '{}/flights/trainday.csv'.format(STORAGE_BASE_URI)
+OUTPUT_FILEPATH = '{}/output/out.txt'.format(STORAGE_BASE_URI)
+SUMMARY_FILEPATH = '{}/output/summary.txt'.format(STORAGE_BASE_URI)
+OUTPUT_TEMP_FILEPATH = '{}/output/temp'.format(STORAGE_BASE_URI)
 
-#RUNNER = 'DataflowRunner'
-#INPUT_FILEPATH= 'gs://{}/flights/trainday.csv'.format(PROJECT_ID)
-#OUTPUT_FILEPATH= 'gs://{}/output/out.txt'.format(PROJECT_ID)
-#SUMMARY_FILEPATH= 'gs://{}/output/summary.txt'.format(PROJECT_ID)
-#OUTPUT_TEMP_FILEPATH= 'gs://{}/output/temp'.format(PROJECT_ID)
-
+# overrides the gcp options to run locally
 RUNNER = 'DirectRunner'
 INPUT_FILEPATH= 'trainday.csv'
 OUTPUT_FILEPATH = 'output.txt'
 SUMMARY_FILEPATH = 'summary.txt'
+
 OUTPUT_TEMP_FILEPATH = './temp/'
 START_WORKERS = 1
 MAX_WORKERS = 8
@@ -64,7 +68,7 @@ class Summary(apache_beam.DoFn):
             msg = u'Error at: {}'.format(element['Data'])
             import logging
             logging.basicConfig(level=logging.INFO)
-            logging.getLogger('dataflow_poc').warning(msg)
+            logging.getLogger('dataflow_poc').error(msg)
             yield msg
 
 def main():
@@ -80,6 +84,7 @@ def main():
     worker_options = options.view_as(WorkerOptions)
     gcloud_options.project = PROJECT_ID
     gcloud_options.temp_location = OUTPUT_TEMP_FILEPATH
+    gcloud_options.region = PROJECT_REGION
     worker_options.num_workers = START_WORKERS
     worker_options.max_num_workers = MAX_WORKERS
     gcloud_options.job_name = 'csv-transform'
