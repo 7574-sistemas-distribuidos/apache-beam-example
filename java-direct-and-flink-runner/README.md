@@ -2,28 +2,17 @@
 
 ## Code
 First of all, we need to compile the code. You can use the **java** docker image for that purpose:
-* docker run -ti -v $(pwd)/pipeline/:/src maven:3.5.3-jdk-8 bash
+* cd pipeline && ./run\_development.sh
 
 once in the container:
 
-* cd /src
-* mvn clean package -Pflink-runner
+* cd /pipeline && mvn package -Pflink-runner
 
 Now, the **pipeline/target** folder will contain a **jar** file with the ar.uba.fi.beam.WordCount in a lean and bundled version. The bundled version will be required within the Runners in order to have all the java dependencies in place to instanciate the job.
 
 ## Flink runner
-We'll need to start a Flink server including Job and Task managers. The Job manager will provide a Flink Dashboard which will accept the **jar** bundle to launch the Job. The Task managers are slaves which allows horizontal scalability for job running.
-* cd docker
-* docker-compose up
-
-or:
-
-* docker-compose up --scale taskmanager=3
-
-or:
-
-* docker-compose up
-* docker-compose scale taskmanager=3
+We'll need to start a Flink runner system including Job and Task managers. The Job manager will provide a Flink Dashboard which will accept the **jar** bundle to launch the Job. The Task managers are slaves which allows horizontal scalability for job running.
+* cd runner && ./run\_runner.sh
 
 Then, we can upload the Job code:
 * Go to http://localhost:8081
@@ -46,7 +35,7 @@ or:
 * Click on 'Submit'
 
 To check the results, you can jump into the job manager's containers and look for the output files:
-* docker exec -ti docker_jobmanager_1 bash
+* cd runner && docker compose exec -ti jobmanager bash
 Once in the container:
 * cd /tmp
 * cat output.txt-(time-window)-pane-*

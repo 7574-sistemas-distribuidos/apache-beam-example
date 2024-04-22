@@ -1,7 +1,6 @@
-version: "2.1"
 services:
   jobmanager:
-    image: flink:1.4.2
+    image: flink:1.16-java11
     expose:
       - "6123"
     ports:
@@ -11,7 +10,8 @@ services:
       - JOB_MANAGER_RPC_ADDRESS=jobmanager
 
   taskmanager:
-    image: flink:1.4.2
+    image: flink:1.16-java11
+    scale: 3
     expose:
       - "6121"
       - "6122"

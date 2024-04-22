@@ -1,0 +1,10 @@
+services:
+  development:
+    image: maven:3.5.3-jdk-11
+    command: bash
+    working_dir: /pipeline
+    volumes:
+      - ./pom.xml:/pipeline/pom.xml
+      - ./src:/pipeline/src
+      - ./target:/pipeline/target
+      - ./mvn_repository:/root/.m2/repository
