@@ -8,6 +8,8 @@ services:
     command: jobmanager
     environment:
       - JOB_MANAGER_RPC_ADDRESS=jobmanager
+    volumes:
+      - ./target-jars:/opt/flink/target-jars
 
   taskmanager:
     image: flink:1.16-java11

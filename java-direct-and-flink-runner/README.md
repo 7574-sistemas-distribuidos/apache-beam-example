@@ -14,7 +14,8 @@ Now, the **pipeline/target** folder will contain a **jar** file with the ar.uba.
 We'll need to start a Flink runner system including Job and Task managers. The Job manager will provide a Flink Dashboard which will accept the **jar** bundle to launch the Job. The Task managers are slaves which allows horizontal scalability for job running.
 * cd runner && ./run\_runner.sh
 
-Then, we can upload the Job code:
+### Running jobs with Flink Dashboard
+We can upload the Job code using the dashboard:
 * Go to http://localhost:8081
 * Click on 'Submit new Job'
 * Click on 'Add New'
@@ -34,14 +35,23 @@ or:
   * --runner=FlinkRunner --wordsQty=1000 --windowSize=60 --output=/tmp/out.txt
 * Click on 'Submit'
 
+### Running jobs with Flink cli
+Using the command linke flink client is an alternative to submit jobs to the runner:
+* Copy the .jar bundle file into runners/target-jars which is mounted within the *jobmanager* container
+* cd runner && docker compose exec -ti jobmanager bash
+
+Once in the container:
+* cd /opt/flink/target-jars && flink run -c ar.uba.fi.distribuidos.WordCountPipeline ./beam-java-example-bundled-1.0.jar --runner=FlinkRunner --wordsQty=1000 --windowSize=60 --output=/tmp/out.txt
+
+### Reviewing results
 To check the results, you can jump into the job manager's containers and look for the output files:
 * cd runner && docker compose exec -ti jobmanager bash
 Once in the container:
 * cd /tmp
-* cat output.txt-(time-window)-pane-*
+* cat out.txt-(time-window)-pane-*
  
 i.e.:
 
-* cat output.txt-2018-10-16T00\:11\:00.000Z-2018-10-16T00\:11\:10.000Z-pane-*
+* cat out.txt-2018-10-16T00\:11\:00.000Z-2018-10-16T00\:11\:10.000Z-pane-*
 will print the output for the 10 secs window starting at 2018-10-16-11:00
 
